@@ -3,11 +3,32 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         {% block stylesheets %}{% endblock %}
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+        {% block javascripts %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+    <div class="row">
+        <div class="col-md-4">
+            <h4><a href="{{ path('post_index') }}">Homepage</a></h4>
+            {% if app.user %}
+                <h4>You are logged in as {{ app.user.username }} ({{ app.user.email }})</h4>
+            <a href="{{ path('fos_user_security_logout') }}">Logout</a>
+            {% else %}
+                <h4>You are not logged in!</h4>
+                <a href="{{ path('fos_user_security_login') }}">Login</a>
+                <a href="{{ path('fos_user_registration_register') }}">Register</a>
+            {% endif %}
+        </div>
+        <div class="col-md-4"><h3>Hello, @bshevchenko! This is Symfony2 recruitment challenge!</h3></div>
+        <div class="col-md-4"><h3>SonataAdmin is <a href="{{ path('sonata_admin_dashboard') }}">here!</a></h3>
+            <p>login: <b>admin</b>, password: <b>admin</b> (or you can setup anyone to be admin by adding the ROLE_SONATA_ADMIN to the user (or to his group))</p></div>
+    </div>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
     </body>
 </html>

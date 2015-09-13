@@ -1,0 +1,41 @@
+Application\Arferr\BlogBundle\Entity\Comment:
+    type: entity
+    table: comments
+    repositoryClass: Application\Arferr\BlogBundle\Repository\CommentRepository
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+            options:
+                unsigned: true
+
+    fields:
+        content:
+            column: content
+            type: text
+            nullable: false
+        createdAt:
+            type: datetime
+            nullable: false
+            column: created_at
+
+    lifecycleCallbacks:
+              prePersist:   [ prePersist ]
+
+    manyToOne:
+        author:
+            targetEntity: Application\Sonata\UserBundle\Entity\User
+            cascade: ['persist']
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                onDelete: SET NULL
+
+        post:
+            targetEntity: Application\Arferr\BlogBundle\Entity\Post
+            inversedBy: comments
+            cascade: ['persist']
+            joinColumn:
+                name: post_id
+                referencedColumnName: id
+                onDelete: SET NULL

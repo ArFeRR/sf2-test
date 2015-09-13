@@ -1,0 +1,12 @@
+post_index:
+    path:     /
+    defaults: { _controller: ApplicationArferrBlogBundle:Posts:index }
+
+post_view:
+    path: /posts/{id}
+    defaults: { _controller: ApplicationArferrBlogBundle:Posts:view }
+
+comment_add:
+    path: /posts/{id}/comment/create
+    defaults: { _controller: ApplicationArferrBlogBundle:Comments:ajaxAdd}
+

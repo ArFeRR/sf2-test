@@ -1,0 +1,9 @@
+services:
+#    application_arferr_blog.example:
+#        class: Application\Arferr\BlogBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+    application_arferr_blog.admin.post:
+        class: Application\Arferr\BlogBundle\Admin\PostAdmin
+        arguments: [~, Application\Arferr\BlogBundle\Entity\Post, SonataAdminBundle:CRUD]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Blog, label: Post}

@@ -1,0 +1,29 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="">
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h4 class="box-title"><a href="{{ path('post_view', {'id':post.id}) }}">{{ post.createdAt|date('d.m.Y') }} {{ post.title }} Author: {{ post.author.username }}</a></h4>
+                    </div>
+                    <div class="box-body">
+                        {{ post.content }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <h4>Comments:</h4>
+                {% include "ApplicationArferrBlogBundle:Posts:_comment_form.html.twig"  with {'form': commentForm} only %}
+                {% for comment in post.comments %}
+                    {% include "ApplicationArferrBlogBundle:Posts:_comment.html.twig" with {'comment':comment} only %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+{% endblock %}

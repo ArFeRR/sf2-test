@@ -1,0 +1,4 @@
+<div class="comment" style="border-style: solid">
+        <p>{{ comment.createdAt|date('d.m.Y H:i:s') }} by {{ comment.author.username }} ({{ comment.author.email }})</p>
+        <p>{{ comment.content }}</p>
+</div>
