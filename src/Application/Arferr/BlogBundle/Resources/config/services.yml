@@ -3,7 +3,7 @@ services:
         class: Application\Arferr\BlogBundle\Admin\PostAdmin
         arguments: [~, Application\Arferr\BlogBundle\Entity\Post, SonataAdminBundle:CRUD]
         calls:
-            - [ setContainer, [@service_container]]
+            - [ setEventDispatcher, [@event_dispatcher]]
         tags:
             - {name: sonata.admin, manager_type: orm, group: Blog, label: Post}
 

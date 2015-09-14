@@ -10,21 +10,29 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class PostAdmin extends Admin
 {
-    /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
-    private $container;
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
      */
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
-        $this->container = $container;
+    public function setEventDispatcher($eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getContainer() {
-        return $this->container;
+    /**
+     * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
     }
 
     /**
@@ -101,7 +109,6 @@ class PostAdmin extends Admin
         $event->setAuthorUsername($username);
         $event->setContent($post->getContent());
 
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
-        $dispatcher->dispatch('application_arferr_blog.event.new_post', $event);
+        $this->getEventDispatcher()->dispatch('application_arferr_blog.event.new_post', $event);
     }
 }
