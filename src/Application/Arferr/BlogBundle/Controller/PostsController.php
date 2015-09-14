@@ -23,10 +23,7 @@ class PostsController extends Controller
             throw $this->createNotFoundException('There is no post with such id!');
         }
 
-        $comment = new Comment();
-        $comment->setAuthor($this->getUser());
-        $comment->setPost($post);
-        $commentForm = $this->createForm(new CommentType(), $comment);
+        $commentForm = $this->createForm(new CommentType(), new Comment(), array('action' => $this->generateUrl('comment_add', array('post_id'=>$id))));
 
         return $this->render('ApplicationArferrBlogBundle:Posts:view.html.twig', array('post'=>$post, 'commentForm'=>$commentForm->createView()));
     }

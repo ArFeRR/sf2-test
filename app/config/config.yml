@@ -42,8 +42,8 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
-    #java: /usr/bin/java
+    bundles:        [ApplicationArferrBlogBundle ]
+
     filters:
         cssrewrite: ~
         #closure:
@@ -72,15 +72,8 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        #naming_strategy: doctrine.orm.naming_strategy.underscore
-        #auto_mapping: true
-        entity_managers:
-            default:
-                mappings:
-                    ApplicationArferrBlogBundle: ~
-                    ApplicationSonataUserBundle: ~
-                    SonataUserBundle: ~
-                    FOSUserBundle: ~
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:

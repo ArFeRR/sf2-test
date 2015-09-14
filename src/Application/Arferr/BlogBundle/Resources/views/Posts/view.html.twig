@@ -1,10 +1,17 @@
 {% extends "::base.html.twig" %}
 
+{% block javascripts %}
+    {% javascripts '@ApplicationArferrBlogBundle/Resources/public/js/comment.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <div class="">
+
+            <div class="row">
                 <div class="box box-success">
                     <div class="box-header">
                         <h4 class="box-title"><a href="{{ path('post_view', {'id':post.id}) }}">{{ post.createdAt|date('d.m.Y') }} {{ post.title }} Author: {{ post.author.username }}</a></h4>
@@ -14,10 +21,15 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <h4>Comments:</h4>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 {% include "ApplicationArferrBlogBundle:Posts:_comment_form.html.twig"  with {'form': commentForm} only %}
+                {% else  %}
+                    <div class="box">
+                        <h4> Please, <a href="{{ path('fos_user_security_login') }}">login to enable comment feature!</a></h4>
+                    </div>
+                {% endif %}
                 {% for comment in post.comments %}
                     {% include "ApplicationArferrBlogBundle:Posts:_comment.html.twig" with {'comment':comment} only %}
                 {% endfor %}

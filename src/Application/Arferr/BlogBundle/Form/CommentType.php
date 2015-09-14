@@ -26,7 +26,8 @@ class CommentType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Application\Arferr\BlogBundle\Entity\Comment'
+            'data_class' => 'Application\Arferr\BlogBundle\Entity\Comment',
+            'attr' => array('id' => 'new-comment-form')
         ));
     }
 
