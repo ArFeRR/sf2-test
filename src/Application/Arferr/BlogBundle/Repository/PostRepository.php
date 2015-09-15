@@ -25,15 +25,19 @@ class PostRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
+     * @param int $postId
+     *
      * @return mixed
      */
-    public function findOneByIdWithComments() {
+    public function findOneByIdWithComments($postId) {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('p, c, a')
             ->from('\Application\Arferr\BlogBundle\Entity\Post', 'p')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('c.author', 'a')
             ->orderBy('c.createdAt', 'desc')
+            ->where('p.id = :postId')
+            ->setParameter('postId', $postId)
             ->getQuery();
 
         return $qb->getOneOrNullResult();

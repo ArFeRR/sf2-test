@@ -7,6 +7,6 @@ post_view:
     defaults: { _controller: ApplicationArferrBlogBundle:Posts:view }
 
 comment_add:
-    path: /posts/{post_id}/comment/create
+    path: /posts/{postId}/comment/create
     defaults: { _controller: ApplicationArferrBlogBundle:Comments:ajaxAdd }
 

@@ -11,11 +11,17 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CommentsController extends Controller
 {
-    public function ajaxAddAction($post_id, Request $request) {
-        if($request->isXmlHttpRequest()) {
-            $em = $this->getDoctrine()->getManager();
-            $post = $em->getRepository('ApplicationArferrBlogBundle:Post')->find($post_id);
-            $comment = new Comment();
+    /**
+     * @param $postId
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function ajaxAddAction($postId, Request $request) {
+        if($request->isXmlHttpRequest() && $request->isMethod('POST')) { //for only ajax sent post requests to be processed
+            $commentManager = $this->get('application_arferr_blog.service.comment_manager');
+            $post = $this->getDoctrine()->getRepository('ApplicationArferrBlogBundle:Post')->find($postId);
+            /** @var Comment $comment */
+            $comment = $commentManager->createComment();
             $form = $this->createForm(new CommentType(), $comment);
             $author = $this->getUser();
 
@@ -24,31 +30,19 @@ class CommentsController extends Controller
             if ($form->isValid()) {
                 $comment->setPost($post);
                 $comment->setAuthor($author);
-                try {
-                    $em->persist($comment);
-                    $em->flush();
+                $commentManager->updateComment($comment, true);
+                //dispatching the new comment event, which will lead to the notification of the external systems
+                $commentManager->dispatchNewCommentEvent($author->getUsername(), $comment->getContent(), $postId);
 
-                    //dispatching the new comment event, which will lead to the notification of the external systems
-                    $event = new NewCommentEvent();
-                    $event->setAuthorUsername($author->getUsername());
-                    $event->setContent($comment->getContent());
-                    $event->setPostId($post_id);
-
-                    $dispatcher = $this->get('event_dispatcher');
-                    $dispatcher->dispatch('application_arferr_blog.event.new_comment', $event);
-
-                    $view = $this->renderView('ApplicationArferrBlogBundle:Posts:_comment.html.twig', array('comment'=>$comment));
-                    $response = array('status' => 'ok', 'message' => 'Your comment was successfully added.', 'html'=>$view);
-                } catch (\Exception $e) {
-                    $response = array('status'=> 'error', 'message' => $e->getMessage());
-                }
+                $view = $this->renderView('ApplicationArferrBlogBundle:Posts:_comment.html.twig', array('comment'=>$comment));
+                $response = array('status' => 'ok', 'code' => 200, 'message' => 'Your comment was successfully added.', 'html'=>$view);
             } else {
-                $response = array('status' => 'invalidForm', 'message' => $form->getErrorsAsString());
+                $response = array('status' => 'invalidForm', 'code' => 422, 'message' => $form->getErrorsAsString());
             }
         } else {
-            $response = array('status' => 'wrongRequest', 'message' => 'Wrong request. Must be ajax.');
+            $response = array('status' => 'wrongRequest', 'code' => 400, 'message' => 'Wrong request. Must be ajax.');
         }
 
-        return new JsonResponse($response);
+        return new JsonResponse($response, $response['code']);
     }
 }

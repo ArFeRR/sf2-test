@@ -36,3 +36,7 @@ services:
         arguments: ['http://stats.example.com', 'posts/new']
         tags:
             - {name: kernel.event_listener, event: application_arferr_blog.event.new_post, method: onNewPost}
+
+    application_arferr_blog.service.comment_manager:
+        class: Application\Arferr\BlogBundle\Service\CommentManager
+        arguments: [@event_dispatcher, @doctrine.orm.entity_manager]
